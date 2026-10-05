@@ -1,0 +1,56 @@
+[
+  {
+    "id": "p1",
+    "name": "Aero Runner Sneakers",
+    "description": "Lightweight daily trainers",
+    "price": 2499,
+    "mrp": 4999,
+    "emoji": "\ud83d\udc5f",
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop&q=80",
+    "gradient": [
+      "#1e3a8a",
+      "#2a46a8"
+    ],
+    "total": 100,
+    "available": 100,
+    "reserved": 0,
+    "sold": 0,
+    "version": 1
+  },
+  {
+    "id": "p2",
+    "name": "Pulse ANC Headphones",
+    "description": "40-hour battery, noise cancelling",
+    "price": 3999,
+    "mrp": 7999,
+    "emoji": "\ud83c\udfa7",
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop&q=80",
+    "gradient": [
+      "#352a7a",
+      "#4b2d9a"
+    ],
+    "total": 40,
+    "available": 40,
+    "reserved": 0,
+    "sold": 0,
+    "version": 1
+  },
+  {
+    "id": "p3",
+    "name": "Tempo Smartwatch",
+    "description": "Heart rate, GPS, 7-day battery",
+    "price": 2999,
+    "mrp": 5999,
+    "emoji": "\u231a",
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop&q=80",
+    "gradient": [
+      "#0f4c5c",
+      "#115e59"
+    ],
+    "total": 25,
+    "available": 24,
+    "reserved": 1,
+    "sold": 0,
+    "version": 1
+  }
+]

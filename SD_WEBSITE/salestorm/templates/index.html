@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salestorm</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="floating-bg">
+        <div class="cartoon c1">🤖</div>
+        <div class="cartoon c2">🧸</div>
+        <div class="cartoon c3">🚂</div>
+        <div class="cartoon c4">🚁</div>
+        <div class="cartoon c5">👾</div>
+        <div class="cartoon c6">🪁</div>
+        <div class="cartoon c7">🪀</div>
+        <div class="cartoon c8">🚗</div>
+    </div>
+    <header>
+        <div class="logo">⚡ Salestorm</div>
+        <div class="nav">
+            <span id="user-display" style="margin-right: 12px; font-weight: 600; color: var(--text-muted); align-self: center;"></span>
+            <button class="nav-btn" onclick="window.location.href='/cart'">Cart <span id="cart-badge">0</span></button>
+            <button class="nav-btn" onclick="logout()" style="border-color: var(--danger); color: var(--danger);">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Limited drops.<br>Stock you can trust.</h1>
+            <p>Add an item and we hold it for you for 10 minutes. When the last unit is held or sold, it shows as sold out.</p>
+        </section>
+
+        <section class="grid" id="product-grid">
+            <!-- Rendered via JS -->
+        </section>
+    </main>
+
+    <div id="toast-container"></div>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/store.js"></script>
+</body>
+</html>

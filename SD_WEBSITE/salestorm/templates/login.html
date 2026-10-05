@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Salestorm</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .login-container { max-width: 400px; margin: 100px auto; background: var(--card); padding: 40px; border-radius: 16px; border: 1px solid var(--border); text-align: center; }
+        .login-container input { width: 100%; padding: 12px; margin: 16px 0; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: white; box-sizing: border-box; }
+        .login-btn { width: 100%; background: var(--accent); color: var(--accent-dark); padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 16px; }
+        .login-btn:hover { filter: brightness(1.1); }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2 style="margin-top: 0;">Welcome to Salestorm</h2>
+        <p style="color: var(--text-muted); font-size: 14px;">Log in to access limited drops.</p>
+        <form onsubmit="handleLogin(event)">
+            <input type="text" id="username" placeholder="Enter your username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" class="login-btn">Log In</button>
+        </form>
+    </div>
+    <script>
+        async function handleLogin(e) {
+            e.preventDefault();
+            const un = document.getElementById('username').value;
+            const pw = document.getElementById('password').value;
+            
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: un, password: pw })
+                });
+                
+                if (!res.ok) {
+                    const data = await res.json();
+                    alert(data.error || 'Login failed');
+                    return;
+                }
+                
+                localStorage.setItem('customerId', un); 
+                window.location.href = '/';
+            } catch (err) {
+                alert('Network error during login');
+            }
+        }
+    </script>
+</body>
+</html>

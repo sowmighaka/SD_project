@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Salestorm</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .cart-container { max-width: 800px; margin: 40px auto; padding: 0 24px; }
+        .cart-item { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .cart-item h3 { margin: 0; }
+        .cart-total { font-size: 24px; font-weight: 800; text-align: right; margin-top: 32px; }
+        .pay-btn { background: var(--success); color: var(--bg); padding: 16px 32px; border: none; border-radius: 12px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 16px; width: 100%; transition: 0.2s; }
+        .pay-btn:hover { filter: brightness(1.1); }
+    </style>
+</head>
+<body>
+    <div class="floating-bg">
+        <div class="cartoon c1">🤖</div>
+        <div class="cartoon c2">🧸</div>
+        <div class="cartoon c3">🚂</div>
+        <div class="cartoon c4">🚁</div>
+        <div class="cartoon c5">👾</div>
+        <div class="cartoon c6">🪁</div>
+        <div class="cartoon c7">🪀</div>
+        <div class="cartoon c8">🚗</div>
+    </div>
+    <header>
+        <div class="logo" style="cursor:pointer;" onclick="window.location.href='/'">⚡ Salestorm</div>
+        <div class="nav">
+            <button class="nav-btn" onclick="window.location.href='/'">Back to Store</button>
+            <button class="nav-btn" onclick="logout()" style="border-color: var(--danger); color: var(--danger);">Logout</button>
+        </div>
+    </header>
+
+    <main class="cart-container">
+        <h1>Your Cart</h1>
+        <div id="cart-items">Loading...</div>
+        <div class="cart-total" id="cart-total">Total: ₹0</div>
+        
+        <button class="pay-btn" id="init-pay-btn" onclick="showPaymentForm()">Pay Now</button>
+        
+        <div id="payment-form" style="display: none; background: var(--card); padding: 24px; border-radius: 12px; margin-top: 24px; border: 1px solid var(--border);">
+            <h3 style="margin-top: 0;">Select Payment Method</h3>
+            <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                <label style="flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--bg);">
+                    <input type="radio" name="method" value="UPI" checked onchange="toggleCardDetails()"> UPI
+                </label>
+                <label style="flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--bg);">
+                    <input type="radio" name="method" value="Card" onchange="toggleCardDetails()"> Card
+                </label>
+                <label style="flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--bg);">
+                    <input type="radio" name="method" value="Netbanking" onchange="toggleCardDetails()"> Netbanking
+                </label>
+            </div>
+            
+            <div id="upi-details" style="display: block; margin-bottom: 16px;">
+                <input type="text" id="upi-id-input" placeholder="Enter UPI ID (e.g., name@okbank)" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: white; box-sizing: border-box;">
+            </div>
+            
+            <div id="card-details" style="display: none; margin-bottom: 16px;">
+                <input type="text" placeholder="Card Number" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: white; box-sizing: border-box;">
+                <div style="display: flex; gap: 12px;">
+                    <input type="text" placeholder="MM/YY" style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: white; box-sizing: border-box;">
+                    <input type="text" placeholder="CVV" style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: white; box-sizing: border-box;">
+                </div>
+            </div>
+            
+            <p style="color: var(--text-muted); font-size: 13px; margin: 0 0 16px 0;">Payments are processed by a secure gateway; we never store card details.</p>
+            
+            <button class="pay-btn" id="confirm-pay-btn" onclick="processPayment()">Confirm Payment</button>
+        </div>
+    </main>
+
+    <div id="toast-container"></div>
+    <script src="/static/js/app.js"></script>
+    <script>
+        async function loadCart() {
+            try {
+                const data = await apiCall('/api/cart');
+                const container = document.getElementById('cart-items');
+                if (data.items.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-muted)">Your cart is empty.</p>';
+                } else {
+                    container.innerHTML = data.items.map(item => `
+                        <div class="cart-item">
+                            <div style="display: flex; align-items: center;">
+                                ${item.image ? `<img src="${item.image}" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover;">` : `<span style="font-size: 24px;">${item.emoji}</span>`}
+                                <div style="margin-left: 12px;">
+                                    <h3 style="margin: 0;">${item.name}</h3>
+                                    <p style="color: var(--text-muted); margin: 4px 0 0 0;">Qty: ${item.qty}</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="font-size: 20px; font-weight: 700;">₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
+                                <button onclick="removeFromCart('${item.product_id}')" style="background: transparent; color: var(--danger); border: 1px solid var(--danger); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-family: inherit; font-weight: 600;">Remove</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                document.getElementById('cart-total').innerText = 'Total: ₹' + data.total.toLocaleString('en-IN');
+            } catch (e) {
+                document.getElementById('cart-items').innerHTML = '<p style="color: var(--danger)">Failed to load cart.</p>';
+            }
+        }
+        
+        function showPaymentForm() {
+            document.getElementById('init-pay-btn').style.display = 'none';
+            document.getElementById('payment-form').style.display = 'block';
+        }
+        
+        function toggleCardDetails() {
+            const method = document.querySelector('input[name="method"]:checked').value;
+            document.getElementById('card-details').style.display = method === 'Card' ? 'block' : 'none';
+            document.getElementById('upi-details').style.display = method === 'UPI' ? 'block' : 'none';
+        }
+        
+        async function removeFromCart(productId) {
+            try {
+                await apiCall(`/api/cart/items/${productId}`, 'DELETE');
+                showToast('Item removed from cart');
+                loadCart();
+            } catch (e) {
+                showToast(e.message || 'Error removing item');
+            }
+        }
+        
+        async function processPayment() {
+            const method = document.querySelector('input[name="method"]:checked').value;
+            
+            if (method === 'UPI') {
+                const upiId = document.getElementById('upi-id-input').value;
+                if (!upiId || !upiId.includes('@')) {
+                    showToast('Please enter a valid UPI ID (e.g. name@bank)');
+                    return;
+                }
+            }
+            
+            showToast(`Processing ${method} payment...`);
+            
+            try {
+                const res = await apiCall('/api/checkout', 'POST', { method });
+                showToast('Payment Successful! Order Confirmed.');
+                setTimeout(() => window.location.href = '/', 2000);
+            } catch (e) {
+                showToast(e.message || 'Payment failed. Please try again.');
+            }
+        }
+
+        loadCart();
+    </script>
+</body>
+</html>
